@@ -1,0 +1,47 @@
+--- phpxref.pl.orig	2008-10-03 17:19:27.000000000 +0200
++++ phpxref.pl	2008-10-03 17:39:07.000000000 +0200
+@@ -1657,7 +1657,7 @@
+         $newheader =~ s/__STYLEFILE__/..\/$config{stylefile}/g if $config{'stylefile'};
+         $newheader =~ s/__PRINTSTYLEFILE__/..\/$config{printstylefile}/g if $config{'printstylefile'};
+         $newheader =~ s/__RELROOT__/..\//g;
+-        $newheader.=javascript_header(1, '_variables', "index.$ext", "logVariable('$varname');");
++        $newheader.=javascript_header(1, '_variables', $var_ids{$varname}.".$ext", "logVariable('$varname');");
+         print $VARINDEX $newheader;
+         print $VARINDEX &navtoggle_html('../');
+         print $VARINDEX "[<a href=\"../index.$ext\">Top level directory</a>]<br>\n";
+@@ -1782,7 +1782,7 @@
+         $newheader =~ s/__STYLEFILE__/..\/$config{stylefile}/g if $config{'stylefile'};
+         $newheader =~ s/__PRINTSTYLEFILE__/..\/$config{printstylefile}/g if $config{'printstylefile'};
+         $newheader =~ s/__RELROOT__/..\//g;
+-        $newheader.=javascript_header(1, '_functions', "index.$ext", "logFunction('$funcname');");
++        $newheader.=javascript_header(1, '_functions', $func_ids{$funcname}.".$ext", "logFunction('$funcname');");
+         print $FUNCINDEX $newheader;
+         print $FUNCINDEX &navtoggle_html('../');
+         print $FUNCINDEX "[<a href=\"../index.$ext\">Top level directory</a>]<br>\n";
+@@ -1925,7 +1925,7 @@
+         $newheader =~ s/__STYLEFILE__/..\/$config{stylefile}/g if $config{'stylefile'};
+         $newheader =~ s/__PRINTSTYLEFILE__/..\/$config{printstylefile}/g if $config{'printstylefile'};
+         $newheader =~ s/__RELROOT__/..\//g;
+-        $newheader.=javascript_header(1, '_classes', "index.$ext", "logClass('$classname');");
++        $newheader.=javascript_header(1, '_classes', $class_ids{$classname}.".$ext", "logClass('$classname');");
+         print $CLASSINDEX $newheader;
+         print $CLASSINDEX &navtoggle_html('../');
+         print $CLASSINDEX "[<a href=\"../index.$ext\">Top level directory</a>]<br>\n";
+@@ -2025,7 +2025,7 @@
+         $newheader =~ s/__STYLEFILE__/..\/$config{stylefile}/g if $config{'stylefile'};
+         $newheader =~ s/__PRINTSTYLEFILE__/..\/$config{printstylefile}/g if $config{'printstylefile'};
+         $newheader =~ s/__RELROOT__/..\//g;
+-        $newheader.=javascript_header(1, '_constants', "index.$ext", "logConstant('$constname');");
++        $newheader.=javascript_header(1, '_constants', $constname.".$ext", "logConstant('$constname');");
+         print $CONSTINDEX $newheader;
+         print $CONSTINDEX &navtoggle_html('../');
+         print $CONSTINDEX "[<a href=\"../index.$ext\">Top level directory</a>]<br>\n";
+@@ -2123,7 +2123,7 @@
+         $newheader =~ s/__STYLEFILE__/..\/$config{stylefile}/g if $config{'stylefile'};
+         $newheader =~ s/__PRINTSTYLEFILE__/..\/$config{printstylefile}/g if $config{'printstylefile'};
+         $newheader =~ s/__RELROOT__/..\//g;
+-        $newheader.=javascript_header(1, '_tables', "index.$ext");
++        $newheader.=javascript_header(1, '_tables', "$tablenameid.$ext");
+         print $TABLEINDEX $newheader;
+         print $TABLEINDEX &navtoggle_html('../');
+         print $TABLEINDEX &javascript_search(1);
