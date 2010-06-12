@@ -20,20 +20,6 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin {
     }
 
     /**
-     * return some info
-     */
-    function getInfo(){
-        return array(
-            'author' => 'Andreas Gohr',
-            'email'  => 'andi@splitbrain.org',
-            'date'   => '2008-10-03',
-            'name'   => 'PHPXref Plugin',
-            'desc'   => 'Makes linking to a PHPXref generated API doc easy.',
-            'url'    => 'http://dokuwiki.org/plugin:xref',
-        );
-    }
-
-    /**
      * What kind of syntax are we?
      */
     function getType(){
