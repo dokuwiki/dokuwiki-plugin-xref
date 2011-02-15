@@ -56,13 +56,15 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin {
         $match = trim(substr($match,7,-2));
 
         list($link,$name) = explode('|',$match,2);
+        list($link,$anchor) = explode('#',$link,2);
         if(!$name) $name = $link;
+        if($anchor) $anchor = "#".$anchor;
 
         $first = 0;
         if($link[0] == '$') $first = 4;
         $found = $this->_find($link,$first);
 
-        return array($link,$found,$name);
+        return array($link,$found,$name,$anchor);
     }
 
     /**
@@ -86,7 +88,7 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin {
             $link['title'] = $this->getLang('unknown');
             $link['class'] .= ' xref_plugin_err';
         }else{
-            $link['url']  = $this->web.'/'.$data[1];
+            $link['url']  = $this->web.'/'.$data[1].hsc($data[3]);
             $link['title']  = sprintf($this->getLang('view'),hsc($data[0]));
         }
 
