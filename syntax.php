@@ -52,7 +52,7 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin {
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, &$handler){
+    function handle($match, $state, $pos, Doku_Handler $handler){
         $match = trim(substr($match,7,-2));
 
         list($link,$name) = explode('|',$match,2);
@@ -70,7 +70,7 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin {
     /**
      * Create output
      */
-    function render($format, &$R, $data) {
+    function render($format, Doku_Renderer $R, $data) {
         global $conf;
         if($format != 'xhtml') return false;
 
