@@ -1,7 +1,7 @@
 base    xref
 author  Andreas Gohr
 email   andi@splitbrain.org
-date    2014-05-21
+date    2016-02-03
 name    PHPXref Plugin
 desc    Makes linking to a PHPXref generated API doc easy.
 url     http://dokuwiki.org/plugin:xref
