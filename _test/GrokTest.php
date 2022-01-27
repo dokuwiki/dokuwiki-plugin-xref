@@ -42,4 +42,11 @@ class GrokTest extends DokuWikiTest
         $grok = new Grok($reference);
         $this->assertEquals(1, $grok->getResultCount(), $grok->getSearchUrl());
     }
+
+    public function testEmptyData()
+    {
+        $grok = new Grok('', 'https://testurl/');
+        $this->assertEquals('https://testurl', $grok->getSearchUrl());
+        $this->assertSame(0, $grok->getResultCount());
+    }
 }

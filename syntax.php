@@ -45,16 +45,12 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
     {
         $match = trim(substr($match, 7, -2));
 
-        list($link, $name) = explode('|', $match, 2);
-        list($link, $anchor) = explode('#', $link, 2);
-        if (!$name) $name = $link;
-        if ($anchor) $anchor = "#" . $anchor;
+        list($reference, $name) = explode('|', $match, 2);
+        list($reference, $anchor) = explode('#', $reference, 2);
+        if (!$name) $name = $reference;
+        if ($anchor) $reference = "#" . $anchor;
 
-        $first = 0;
-        if ($link[0] == '$') $first = 4;
-        $found = $this->find($link, $first);
-
-        return array($link, $found, $name, $anchor);
+        return array($reference, $name);
     }
 
     /** @inheritdoc */
@@ -63,63 +59,33 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
         global $conf;
         if ($format != 'xhtml') return false;
 
-        //prepare for formating
-        $link['target'] = $conf['target']['extern'];
-        $link['style'] = '';
-        $link['pre'] = '';
-        $link['suf'] = '';
-        $link['more'] = '';
-        $link['class'] = 'xref_plugin';
-        $link['name'] = hsc($data[2]);
+        list($reference, $name) = $data;
+        $grok = new \dokuwiki\plugin\xref\Grok($reference, $this->getConf('grokbaseurl'));
+        $count = $grok->getResultCount();
 
-        if (!$data[1]) {
-            $link['url'] = $this->web;
+        $link = [
+            'target' => $conf['target']['extern'],
+            'style' => '',
+            'pre' => '',
+            'suf' => '',
+            'more' => '',
+            'class' => 'interwiki plugin_xref',
+            'name' => hsc($name),
+            'url' => $grok->getSearchUrl(),
+            'title' => sprintf($this->getLang('view'), hsc($reference)),
+        ];
+
+        if ($count === false || $count === 0) {
             $link['title'] = $this->getLang('unknown');
-            $link['class'] .= ' xref_plugin_err';
-        } else {
-            $link['url'] = $this->web . '/' . $data[1] . hsc($data[3]);
-            $link['title'] = sprintf($this->getLang('view'), hsc($data[0]));
+            $link['class'] .= ' plugin_xref_err';
+        }
+
+        if ($count > 1) {
+            $link['title'] = sprintf($this->getLang('search'), hsc($reference));
         }
 
         $R->doc .= $R->_formatLink($link);
         return true;
-    }
-
-    /**
-     * Try to find the given name in the xref directory
-     *
-     * @param int $first - defines which type should be searched first for the name
-     */
-    protected function find($name, $first = 0)
-    {
-        $paths = array(
-            0 => '_functions',
-            1 => '_classes',
-            2 => '_constants',
-            3 => '_tables',
-            4 => '_variables',
-        );
-
-        $clean = preg_replace('/[^\w\-_]+/', '', $name);
-        $small = strtolower($clean);
-
-        $path = $paths[$first];
-        unset($paths[$first]);
-        do {
-            $check = $path . '/' . $clean . '.html';
-            if (@file_exists($this->dir . '/' . $check)) return $check;
-            $check = $path . '/' . $small . '.html';
-            if (@file_exists($this->dir . '/' . $check)) return $check;
-            $path = array_shift($paths);
-        } while ($path);
-
-        // still here? might be a file reference
-        $clean = preg_replace('/\.\.+/', '.', $name);
-        if (@file_exists($this->dir . '/' . $clean . '.html')) {
-            return $clean . '.html';
-        }
-
-        return '';
     }
 
 }
