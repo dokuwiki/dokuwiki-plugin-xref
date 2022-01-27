@@ -3,60 +3,45 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Andreas Gohr <andi@splitbrain.org>
  */
-// must be run within Dokuwiki
-if (!defined('DOKU_INC')) die();
-
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-require_once(DOKU_PLUGIN . 'syntax.php');
 
 class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
 {
 
-    var $dir = '';
-    var $web = '';
+    protected $dir = '';
+    protected $web = '';
 
-    function syntax_plugin_xref()
+    public function __construct()
     {
         $this->dir = rtrim($this->getConf('dir'), '/');
         $this->web = rtrim($this->getConf('web'), '/');
     }
 
-    /**
-     * What kind of syntax are we?
-     */
-    function getType()
+    /** @inheritdoc */
+    public function getType()
     {
         return 'substition';
     }
 
-    /**
-     * What about paragraphs?
-     */
-    function getPType()
+    /** @inheritdoc */
+    public function getPType()
     {
         return 'normal';
     }
 
-    /**
-     * Where to sort in?
-     */
-    function getSort()
+    /** @inheritdoc */
+    public function getSort()
     {
         return 150;
     }
 
-    /**
-     * Connect pattern to lexer
-     */
-    function connectTo($mode)
+    /** @inheritdoc */
+    public function connectTo($mode)
     {
         $this->Lexer->addSpecialPattern('\[\[xref>.+?\]\]', $mode, 'plugin_xref');
     }
 
-    /**
-     * Handle the match
-     */
-    function handle($match, $state, $pos, Doku_Handler $handler)
+    /** @inheritdoc */
+    public function handle($match, $state, $pos, Doku_Handler $handler)
     {
         $match = trim(substr($match, 7, -2));
 
@@ -67,15 +52,13 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
 
         $first = 0;
         if ($link[0] == '$') $first = 4;
-        $found = $this->_find($link, $first);
+        $found = $this->find($link, $first);
 
         return array($link, $found, $name, $anchor);
     }
 
-    /**
-     * Create output
-     */
-    function render($format, Doku_Renderer $R, $data)
+    /** @inheritdoc */
+    public function render($format, Doku_Renderer $R, $data)
     {
         global $conf;
         if ($format != 'xhtml') return false;
@@ -107,7 +90,7 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
      *
      * @param int $first - defines which type should be searched first for the name
      */
-    function _find($name, $first = 0)
+    protected function find($name, $first = 0)
     {
         $paths = array(
             0 => '_functions',
@@ -140,5 +123,3 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
     }
 
 }
-
-//Setup VIM: ex: et ts=4 enc=utf-8 :
