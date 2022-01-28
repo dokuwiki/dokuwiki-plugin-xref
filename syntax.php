@@ -1,4 +1,7 @@
 <?php
+
+use dokuwiki\plugin\xref\Grok;
+
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Andreas Gohr <andi@splitbrain.org>
@@ -6,15 +9,6 @@
 
 class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
 {
-
-    protected $dir = '';
-    protected $web = '';
-
-    public function __construct()
-    {
-        $this->dir = rtrim($this->getConf('dir'), '/');
-        $this->web = rtrim($this->getConf('web'), '/');
-    }
 
     /** @inheritdoc */
     public function getType()
@@ -60,7 +54,7 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
         if ($format != 'xhtml') return false;
 
         list($reference, $name) = $data;
-        $grok = new \dokuwiki\plugin\xref\Grok($reference, $this->getConf('grokbaseurl'));
+        $grok = new Grok($reference, $this->getConf('grokbaseurl'));
         $count = $grok->getResultCount();
 
         $link = [
