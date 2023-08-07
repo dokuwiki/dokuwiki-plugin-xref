@@ -30,6 +30,10 @@ class HeuristicsTest extends DokuWikiTest
             ['$INFO', 'INFO', ''],
             ['foobar()', 'foobar', ''],
             ['FooBar()', 'FooBar', ''],
+            ['foobar(\'a\', 5)', 'foobar', ''],
+            ['FooBar(\'a\', 5)', 'FooBar', ''],
+            ['foobar($test, $more)', 'foobar', ''],
+            ['FooBar($test, $more)', 'FooBar', ''],
             ['AbstractItem', 'AbstractItem', 'AbstractItem'],
             ['abstractItem', 'abstractItem', ''],
         ];
