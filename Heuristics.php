@@ -90,7 +90,7 @@ class Heuristics
         $reference = array_pop($parts); // last part may be more than a class
 
         // our classes are in inc
-        if($parts[0] == 'dokuwiki') $parts[0] = 'inc';
+        if ($parts[0] == 'dokuwiki') $parts[0] = 'inc';
 
         $this->path = join(' ', $parts);
 

@@ -6,7 +6,6 @@ use dokuwiki\plugin\xref\Grok;
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Andreas Gohr <andi@splitbrain.org>
  */
-
 class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
 {
 

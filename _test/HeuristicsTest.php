@@ -14,7 +14,7 @@ use DokuWikiTest;
 class HeuristicsTest extends DokuWikiTest
 {
     /**
-     * @return \string[][]
+     * @return string[][]
      * @see testHeuristics
      */
     public function provideData()

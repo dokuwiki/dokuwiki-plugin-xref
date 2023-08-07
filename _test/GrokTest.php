@@ -15,7 +15,7 @@ use DokuWikiTest;
 class GrokTest extends DokuWikiTest
 {
     /**
-     * @return \string[][]
+     * @return string[][]
      * @see testResultCount
      */
     public function provideData()

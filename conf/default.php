@@ -5,5 +5,5 @@
  * @author Andreas Gohr <andi@splitbrain.org>
  */
 
-$conf['grokbaseurl']    = 'https://codesearch.dokuwiki.org';
+$conf['grokbaseurl'] = 'https://codesearch.dokuwiki.org';
 

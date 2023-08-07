@@ -26,7 +26,7 @@ class Grok
      */
     public function getSearchUrl()
     {
-        if($this->def === '' && $this->path === '') return $this->baseUrl;
+        if ($this->def === '' && $this->path === '') return $this->baseUrl;
 
         $url = $this->baseUrl . '/search?';
         $param = [
@@ -62,7 +62,7 @@ class Grok
      */
     public function getResultCount()
     {
-        if($this->def === '' && $this->path === '') return 0;
+        if ($this->def === '' && $this->path === '') return 0;
 
         $http = new DokuHTTPClient();
         $http->timeout = 5;
