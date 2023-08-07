@@ -1,5 +1,6 @@
 <?php
 
-$lang['unknown'] = 'unknown cross reference';
-$lang['view']    = 'view cross reference for %s';
+$lang['unknown'] = 'unknown definition';
+$lang['view'] = 'view definition for %s';
+$lang['search'] = 'search definitions for %s';
 

@@ -1,5 +1,3 @@
 <?php
 
-$meta['web'] = array('string');
-$meta['dir'] = array('string');
-
+$meta['grokbaseurl'] = array('string');
