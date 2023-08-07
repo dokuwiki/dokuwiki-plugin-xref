@@ -142,6 +142,11 @@ class Heuristics
             $this->def = $reference;
             return '';
         }
+        if (preg_match('/\(.+?\)$/', $reference)) {
+            [$reference, /* $arguments */] = explode('(', $reference, 2);
+            $this->def = $reference;
+            return '';
+        }
         return $reference;
     }
 
