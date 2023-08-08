@@ -12,6 +12,8 @@ class Heuristics
     protected $def = '';
     /** @var string the path to use */
     protected $path = '';
+    /** @var array deprecated classes and their replacements */
+    protected $deprecations;
 
     /**
      * Try to gues what the given reference means and how to best search for it
@@ -20,6 +22,9 @@ class Heuristics
      */
     public function __construct($reference)
     {
+        $this->loadDeprecations();
+
+        if ($reference !== '') $reference = $this->checkDeprecation($reference);
         if ($reference !== '') $reference = $this->checkHash($reference);
         if ($reference !== '') $reference = $this->checkFilename($reference);
         if ($reference !== '') $reference = $this->checkNamespace($reference);
@@ -44,6 +49,28 @@ class Heuristics
     public function getPath()
     {
         return trim(preg_replace('/[^\w.]+/', ' ', $this->path));
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeprecations()
+    {
+        return $this->deprecations;
+    }
+
+    /**
+     * Replace deprecated classes
+     *
+     * @param string $reference
+     * @return string
+     */
+    protected function checkDeprecation($reference)
+    {
+        if (isset($this->deprecations[$reference])) {
+            return $this->deprecations[$reference];
+        }
+        return $reference;
     }
 
     /**
@@ -86,7 +113,7 @@ class Heuristics
         if (strpos($reference, '\\') === false) return $reference;
 
         $parts = explode('\\', $reference);
-        $parts = array_filter($parts);
+        $parts = array_values(array_filter($parts));
         $reference = array_pop($parts); // last part may be more than a class
 
         // our classes are in inc
@@ -166,4 +193,29 @@ class Heuristics
         }
         return $reference;
     }
+
+    /**
+     * Load deprecated classes info
+     */
+    protected function loadDeprecations()
+    {
+        $this->deprecations = [];
+
+        // class aliases
+        $legacy = file_get_contents(DOKU_INC . 'inc/legacy.php');
+        if (preg_match_all('/class_alias\(\'([^\']+)\', *\'([^\']+)\'\)/', $legacy, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $this->deprecations[$match[2]] = $match[1];
+            }
+        }
+
+        // deprecated classes
+        $deprecations = file_get_contents(DOKU_INC . 'inc/deprecated.php');
+        if (preg_match_all('/class (.+?) extends (\\\\dokuwiki\\\\.+?)(\s|$|{)/', $deprecations, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $this->deprecations[$match[1]] = $match[2];
+            }
+        }
+    }
+
 }

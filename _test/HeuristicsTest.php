@@ -36,6 +36,7 @@ class HeuristicsTest extends DokuWikiTest
             ['FooBar($test, $more)', 'FooBar', ''],
             ['AbstractItem', 'AbstractItem', 'AbstractItem'],
             ['abstractItem', 'abstractItem', ''],
+            ['Doku_Event', 'Event', 'inc Extension Event' ],
         ];
     }
 
@@ -51,5 +52,16 @@ class HeuristicsTest extends DokuWikiTest
 
         $this->assertEquals($expDef, $heur->getDef(), 'definition is wrong');
         $this->assertEquals($expPath, $heur->getPath(), 'path is wrong');
+    }
+
+    public function testDeprecations() {
+        $heur = new Heuristics('foo');
+        $deprecations = $heur->getDeprecations();
+
+        $this->assertArrayHasKey('Doku_Event', $deprecations);
+        $this->assertEquals('\dokuwiki\Extension\Event', $deprecations['Doku_Event']);
+
+        $this->assertArrayHasKey('RemoteException', $deprecations);
+        $this->assertEquals('\dokuwiki\Remote\RemoteException', $deprecations['RemoteException']);
     }
 }
