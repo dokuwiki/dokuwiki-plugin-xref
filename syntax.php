@@ -38,8 +38,8 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
     {
         $match = trim(substr($match, 7, -2));
 
-        list($reference, $name) = explode('|', $match, 2);
-        list($reference, $anchor) = explode('#', $reference, 2);
+        list($reference, $name) = sexplode('|', $match, 2, '');
+        list($reference, $anchor) = sexplode('#', $reference, 2, '');
         if (!$name) $name = $reference;
         if ($anchor) $reference = "#" . $anchor;
 
