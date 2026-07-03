@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default settings for the xref plugin
  *
@@ -6,4 +7,3 @@
  */
 
 $conf['grokbaseurl'] = 'https://codesearch.dokuwiki.org';
-

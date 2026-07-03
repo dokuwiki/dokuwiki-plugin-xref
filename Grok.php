@@ -6,7 +6,6 @@ use dokuwiki\HTTP\DokuHTTPClient;
 
 class Grok
 {
-
     protected $baseUrl;
     protected $def;
     protected $path;
@@ -66,6 +65,7 @@ class Grok
 
         $http = new DokuHTTPClient();
         $http->timeout = 5;
+
         $json = $http->get($this->getAPIUrl());
         if (!$json) return false;
         $data = json_decode($json, true);

@@ -61,7 +61,7 @@ class HeuristicsTest extends DokuWikiTest
         $this->assertArrayHasKey('Doku_Event', $deprecations);
         $this->assertEquals('\dokuwiki\Extension\Event', $deprecations['Doku_Event']);
 
-        $this->assertArrayHasKey('RemoteException', $deprecations);
-        $this->assertEquals('\dokuwiki\Remote\RemoteException', $deprecations['RemoteException']);
+        $this->assertArrayHasKey('IXR_Client', $deprecations);
+        $this->assertEquals('\dokuwiki\Remote\IXR\Client', $deprecations['IXR_Client']);
     }
 }

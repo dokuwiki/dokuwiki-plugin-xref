@@ -7,7 +7,6 @@ namespace dokuwiki\plugin\xref;
  */
 class Heuristics
 {
-
     /** @var string the definition to search */
     protected $def = '';
     /** @var string the path to use */
@@ -67,10 +66,7 @@ class Heuristics
      */
     protected function checkDeprecation($reference)
     {
-        if (isset($this->deprecations[$reference])) {
-            return $this->deprecations[$reference];
-        }
-        return $reference;
+        return $this->deprecations[$reference] ?? $reference;
     }
 
     /**
@@ -81,8 +77,8 @@ class Heuristics
      */
     protected function checkHash($reference)
     {
-        if (strpos($reference, '#') === false) return $reference;
-        list($this->path, $this->def) = explode('#', $reference, 2);
+        if (!str_contains($reference, '#')) return $reference;
+        [$this->path, $this->def] = explode('#', $reference, 2);
         return '';
     }
 
@@ -110,16 +106,17 @@ class Heuristics
      */
     protected function checkNamespace($reference)
     {
-        if (strpos($reference, '\\') === false) return $reference;
+        if (!str_contains($reference, '\\')) return $reference;
 
         $parts = explode('\\', $reference);
         $parts = array_values(array_filter($parts));
+
         $reference = array_pop($parts); // last part may be more than a class
 
         // our classes are in inc
         if ($parts[0] == 'dokuwiki') $parts[0] = 'inc';
 
-        $this->path = join(' ', $parts);
+        $this->path = implode(' ', $parts);
 
         return $reference;
     }
@@ -130,12 +127,12 @@ class Heuristics
     protected function checkClassPrefix($reference)
     {
         if (
-            strpos($reference, '::') === false &&
-            strpos($reference, '->') === false
+            !str_contains($reference, '::') &&
+            !str_contains($reference, '->')
         ) {
             return $reference;
         }
-        list($class, $reference) = preg_split('/(::|->)/', $reference, 2);
+        [$class, $reference] = preg_split('/(::|->)/', $reference, 2);
 
         $this->path .= ' ' . $class;
         $this->def = $reference;
@@ -165,7 +162,7 @@ class Heuristics
      */
     protected function checkFunction($reference)
     {
-        if (substr($reference, -2) == '()') {
+        if (str_ends_with($reference, '()')) {
             $this->def = $reference;
             return '';
         }
@@ -203,7 +200,14 @@ class Heuristics
 
         // class aliases
         $legacy = file_get_contents(DOKU_INC . 'inc/legacy.php');
-        if (preg_match_all('/class_alias\(\'([^\']+)\', *\'([^\']+)\'\)/', $legacy, $matches, PREG_SET_ORDER)) {
+        if (
+            preg_match_all(
+                '/class_alias\(\'([^\']+)\', *\'([^\']+)\'\)/',
+                $legacy,
+                $matches,
+                PREG_SET_ORDER
+            )
+        ) {
             foreach ($matches as $match) {
                 $this->deprecations[$match[2]] = $match[1];
             }
@@ -211,11 +215,17 @@ class Heuristics
 
         // deprecated classes
         $deprecations = file_get_contents(DOKU_INC . 'inc/deprecated.php');
-        if (preg_match_all('/class (.+?) extends (\\\\dokuwiki\\\\.+?)(\s|$|{)/', $deprecations, $matches, PREG_SET_ORDER)) {
+        if (
+            preg_match_all(
+                '/class (.+?) extends (\\\\dokuwiki\\\\.+?)(\s|$|{)/',
+                $deprecations,
+                $matches,
+                PREG_SET_ORDER
+            )
+        ) {
             foreach ($matches as $match) {
                 $this->deprecations[$match[1]] = $match[2];
             }
         }
     }
-
 }

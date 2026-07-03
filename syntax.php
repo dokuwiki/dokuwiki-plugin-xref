@@ -1,14 +1,15 @@
 <?php
 
+use dokuwiki\Extension\SyntaxPlugin;
+use dokuwiki\Parsing\Handler;
 use dokuwiki\plugin\xref\Grok;
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Andreas Gohr <andi@splitbrain.org>
  */
-class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
+class syntax_plugin_xref extends SyntaxPlugin
 {
-
     /** @inheritdoc */
     public function getType()
     {
@@ -34,15 +35,15 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
     }
 
     /** @inheritdoc */
-    public function handle($match, $state, $pos, Doku_Handler $handler)
+    public function handle($match, $state, $pos, Handler $handler)
     {
         $match = trim(substr($match, 7, -2));
 
         // the optional anchor (reference#symbol) is handled by the Heuristics class
-        list($reference, $name) = sexplode('|', $match, 2, '');
+        [$reference, $name] = sexplode('|', $match, 2, '');
         if (!$name) $name = $reference;
 
-        return array($reference, $name);
+        return [$reference, $name];
     }
 
     /** @inheritdoc */
@@ -51,7 +52,7 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
         global $conf;
         if ($format != 'xhtml') return false;
 
-        list($reference, $name) = $data;
+        [$reference, $name] = $data;
         $grok = new Grok($reference, $this->getConf('grokbaseurl'));
         $count = $grok->getResultCount();
 
@@ -79,5 +80,4 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
         $R->doc .= $R->_formatLink($link);
         return true;
     }
-
 }
