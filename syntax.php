@@ -38,10 +38,9 @@ class syntax_plugin_xref extends DokuWiki_Syntax_Plugin
     {
         $match = trim(substr($match, 7, -2));
 
+        // the optional anchor (reference#symbol) is handled by the Heuristics class
         list($reference, $name) = sexplode('|', $match, 2, '');
-        list($reference, $anchor) = sexplode('#', $reference, 2, '');
         if (!$name) $name = $reference;
-        if ($anchor) $reference = "#" . $anchor;
 
         return array($reference, $name);
     }
